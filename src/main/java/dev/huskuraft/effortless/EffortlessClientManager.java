@@ -126,8 +126,17 @@ public final class EffortlessClientManager implements ClientManager {
         return tooltipRenderer;
     }
 
+    
     private void tickCooldown() {
-        if (OptionKeys.KEY_ATTACK.getKeyBinding().isDown() || OptionKeys.KEY_USE.getKeyBinding().isDown() || OptionKeys.KEY_PICK_ITEM.getKeyBinding().isDown()) {
+        // don't try to access OptionKeys / client key bindings if the client isn't present yet
+        var client = getEntrance().getClient();
+        if (client == null || client.getWindow() == null) {
+            return;
+        }
+    
+        if (OptionKeys.KEY_ATTACK.getKeyBinding().isDown()
+                || OptionKeys.KEY_USE.getKeyBinding().isDown()
+                || OptionKeys.KEY_PICK_ITEM.getKeyBinding().isDown()) {
             return;
         }
         this.interactionCooldown = Math.max(0, this.interactionCooldown - 1);
